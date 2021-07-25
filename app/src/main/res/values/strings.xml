@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Me Chat</string>
+
+    //Login Activity
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="here">Here</string>
+    <string name="login">Login</string>
+    <string name="using_connect">Or connect using</string>
+    <string name="google_login">Login with Google</string>
+    <string name="facebook_login">Login with Facebook</string>
+    <string name="full_name">Full Name</string>
+</resources>
