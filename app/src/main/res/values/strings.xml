@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">Me Chat</string>
+    <string name="facebook_app_id">318938773083048</string>
+    <string name="fb_login_protocol_scheme">fb318938773083048</string>
 
     //Login Activity
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="register">Register</string>
     <string name="here">Here</string>
     <string name="login">Login</string>
     <string name="using_connect">Or connect using</string>
