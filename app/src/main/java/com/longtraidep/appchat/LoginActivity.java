@@ -1,7 +1,5 @@
 package com.longtraidep.appchat;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -13,11 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +23,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button mBtnLogin;
     private TextInputEditText mEdtEmail, mEdtPassword;
     private TextView mTvRegister;
+    private ProgressDialog mPrdLogin;
 
     private FirebaseAuth mAuth;
 
@@ -72,10 +71,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         //User login fail
                         else
                         {
+                            mPrdLogin.dismiss();
                             Toast.makeText(getApplicationContext(), "Invalid email or password!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        mPrdLogin.dismiss();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -95,6 +100,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(getApplicationContext(), "Please fill enough!", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    mPrdLogin = new ProgressDialog(LoginActivity.this);
+                    mPrdLogin.show();
+                    mPrdLogin.setContentView(R.layout.progress_dialog_auth);
+                    mPrdLogin.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                     loginUser(mEmail, mPassword);
                 }
                 break;
