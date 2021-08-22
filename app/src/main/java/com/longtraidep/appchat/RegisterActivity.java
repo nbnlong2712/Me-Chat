@@ -47,7 +47,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         init();
 
-
         mBtnRegister.setOnClickListener(this);
     }
 

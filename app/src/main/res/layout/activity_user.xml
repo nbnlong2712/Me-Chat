@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.75"
+            tools:ignore="NestedWeights">
+
+            <ImageButton
+                android:id="@+id/ibtn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="6.5"
+            android:gravity="center"
+            android:text="@string/profile"
+            android:textSize="37sp" />
+        <LinearLayout
+            android:layout_weight="1.75"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4.8"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/cimv_avatar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/firebase_img"
+            tools:ignore="NestedWeights" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_weight="1.8"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="NestedWeights">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/username" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":" />
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/username" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":" />
+
+                <TextView
+                    android:id="@+id/tv_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/email" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_id" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":" />
+
+                <TextView
+                    android:id="@+id/tv_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/user_id" />
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/fbtn_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:layout_marginTop="55dp"
+                android:gravity="center"
+                android:text="@string/edit"
+                android:textColor="@color/white"
+                app:icon="@drawable/edit"
+                app:iconTint="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="370dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="@color/grey_4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fbtn_logout"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/grey_4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/logout"
+            android:textColor="@color/black" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fbtn_delete_account"
+            android:layout_width="280dp"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/delete_account_custom"
+            android:gravity="center"
+            android:text="@string/delete_account"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</LinearLayout>

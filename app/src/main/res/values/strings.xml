@@ -3,6 +3,13 @@
     <string name="facebook_app_id">318938773083048</string>
     <string name="fb_login_protocol_scheme">fb318938773083048</string>
 
+    //Main Activity
+    <string name="chat">Chat</string>
+    <string name="user">User</string>
+
+    //Register activity
+    <string name="full_name">Full Name</string>
+
     //Login Activity
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -13,5 +20,12 @@
     <string name="using_connect">Or connect using</string>
     <string name="google_login">Login with Google</string>
     <string name="facebook_login">Login with Facebook</string>
-    <string name="full_name">Full Name</string>
+
+    //User activity
+    <string name="user_id">User ID</string>
+    <string name="logout">Logout</string>
+    <string name="edit">Edit</string>
+    <string name="profile">Profile</string>
+    <string name="delete_account">Delete account</string>
+
 </resources>

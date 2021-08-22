@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressDialog mPrdLogin;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
 
     private String mEmail = "", mPassword = "";
 
@@ -40,6 +41,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         init();
 
         mBtnLogin.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mUser = mAuth.getCurrentUser();
+        if (mUser != null)
+        {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
+
     }
 
     public void init() {
