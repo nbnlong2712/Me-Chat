@@ -43,4 +43,16 @@
     <color name="red_8">#9a0000</color>
     <color name="red_9">#800000</color>
     <color name="red_10">#5f0000</color>
+
+                <!--GREY-->
+    <color name="grey_1">#f0f0f0</color>
+    <color name="grey_2">#ebebeb</color>
+    <color name="grey_3">#dcdcdc</color>
+    <color name="grey_4">#cdcdcd</color>
+    <color name="grey_5">#c3c3c3</color>
+    <color name="grey_6">#b4b4b4</color>
+    <color name="grey_7">#a8a8a8</color>
+    <color name="grey_8">#989898</color>
+    <color name="grey_9">#8b8b8b</color>
+    <color name="grey_10">#6e6e6e</color>
 </resources>
