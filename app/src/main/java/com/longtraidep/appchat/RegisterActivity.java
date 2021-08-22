@@ -1,12 +1,12 @@
 package com.longtraidep.appchat;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button mBtnRegister;
     private TextInputEditText mEdtFullName, mEdtEmail, mEdtPassword;
     private TextView mTvLogin;
+    private ProgressDialog mPrdRegister;
 
     FirebaseAuth mAuth;
     DatabaseReference mDatabaseRef;
@@ -99,10 +100,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             FirebaseAuthException e = (FirebaseAuthException) task.getException();
                             if (e != null)
                                 Log.i("Firebase auth test", e.getMessage() + ", " + e.getErrorCode());
+                            mPrdRegister.dismiss();
                             Toast.makeText(getApplicationContext(), "Invalid email or password!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        mPrdRegister.dismiss();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -121,6 +128,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (mEmail.isEmpty() || mPassword.isEmpty() || mFullname.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please fill enough!", Toast.LENGTH_SHORT).show();
                 } else {
+                    mPrdRegister = new ProgressDialog(RegisterActivity.this);
+                    mPrdRegister.setContentView(R.layout.progress_dialog_auth);
+                    mPrdRegister.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    mPrdRegister.show();
                     registerNewUser(mFullname, mEmail, mPassword);
                 }
                 break;
