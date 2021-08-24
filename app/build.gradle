@@ -40,9 +40,11 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
 
     //Firebase
-    implementation platform('com.google.firebase:firebase-bom:28.3.0')
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
-    implementation 'com.google.firebase:firebase-database:20.0.1'
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage'
+
 
     //Facebook
     implementation 'com.facebook.android:facebook-android-sdk:11.1.1'
