@@ -1,4 +1,4 @@
-package com.longtraidep.appchat;
+package com.longtraidep.appchat.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.longtraidep.appchat.Activity.LoginActivity;
+import com.longtraidep.appchat.R;
 
 import java.util.HashMap;
 

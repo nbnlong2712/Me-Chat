@@ -1,7 +1,6 @@
 package com.longtraidep.appchat.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.longtraidep.appchat.Adapter.UserAdapter;
 import com.longtraidep.appchat.R;
-import com.longtraidep.appchat.User.Users;
+import com.longtraidep.appchat.Object.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,10 @@ public class UserFragment extends Fragment {
     }
 
     public void readDataFromFirebase() {
+        // Mở database và tham chiếu đến child cần thiết
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        // Gọi các listener tương ứng để lấy dữ liệu
         mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

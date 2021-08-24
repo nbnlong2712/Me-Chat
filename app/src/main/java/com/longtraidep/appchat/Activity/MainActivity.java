@@ -1,4 +1,4 @@
-package com.longtraidep.appchat;
+package com.longtraidep.appchat.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,7 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.longtraidep.appchat.Adapter.ViewPagerAdapter;
-import com.longtraidep.appchat.User.Users;
+import com.longtraidep.appchat.R;
+import com.longtraidep.appchat.Object.Users;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

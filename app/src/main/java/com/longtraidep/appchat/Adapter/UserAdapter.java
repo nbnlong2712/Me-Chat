@@ -1,18 +1,18 @@
 package com.longtraidep.appchat.Adapter;
 
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.longtraidep.appchat.Activity.MessageActivity;
 import com.longtraidep.appchat.R;
-import com.longtraidep.appchat.User.Users;
+import com.longtraidep.appchat.Object.Users;
 
 import java.util.List;
 
@@ -59,14 +59,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
         public UserHolder(@NonNull View itemView) {
             super(itemView);
-
+            itemView.setOnClickListener(this);
             mCircleImageView = itemView.findViewById(R.id.cimv_avatar);
             mTextView = itemView.findViewById(R.id.tv_username);
         }
 
         @Override
         public void onClick(View v) {
-            Log.i("Clicked!", "Clicked!");
+            Intent i = new Intent(v.getContext(), MessageActivity.class);
+            i.putExtra("user", mUsers.get(getAdapterPosition()));
+            v.getContext().startActivity(i);
         }
     }
 }
