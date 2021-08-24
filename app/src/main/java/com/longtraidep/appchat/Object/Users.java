@@ -1,6 +1,8 @@
-package com.longtraidep.appchat.User;
+package com.longtraidep.appchat.Object;
 
-public class Users {
+import java.io.Serializable;
+
+public class Users implements Serializable {
 
     private String Id;
     private String Username;

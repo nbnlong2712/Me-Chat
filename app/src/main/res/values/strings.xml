@@ -28,4 +28,7 @@
     <string name="profile">Profile</string>
     <string name="delete_account">Delete account</string>
 
+    //Message activity
+    <string name="message">Message</string>
+
 </resources>

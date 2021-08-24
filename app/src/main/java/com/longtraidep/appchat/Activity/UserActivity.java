@@ -1,4 +1,4 @@
-package com.longtraidep.appchat;
+package com.longtraidep.appchat.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -20,8 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.longtraidep.appchat.Activity.LoginActivity;
-import com.longtraidep.appchat.User.Users;
+import com.longtraidep.appchat.R;
+import com.longtraidep.appchat.Object.Users;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
