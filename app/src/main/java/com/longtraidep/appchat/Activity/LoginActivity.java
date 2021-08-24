@@ -1,4 +1,4 @@
-package com.longtraidep.appchat;
+package com.longtraidep.appchat.Activity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -6,6 +6,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.longtraidep.appchat.MainActivity;
+import com.longtraidep.appchat.R;
+import com.longtraidep.appchat.RegisterActivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
