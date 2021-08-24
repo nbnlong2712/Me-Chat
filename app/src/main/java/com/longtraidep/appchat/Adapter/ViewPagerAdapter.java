@@ -1,4 +1,4 @@
-package com.longtraidep.appchat;
+package com.longtraidep.appchat.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

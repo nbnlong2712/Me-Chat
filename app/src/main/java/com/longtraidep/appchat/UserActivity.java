@@ -1,6 +1,7 @@
 package com.longtraidep.appchat;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.longtraidep.appchat.Activity.LoginActivity;
 import com.longtraidep.appchat.User.Users;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,6 +34,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton mIBtnBack;
     FirebaseUser mFirebaseUser;
     DatabaseReference mDatabaseReference;
+
+    private ProgressDialog mPrdLogin;
 
     private Users mUser = new Users();
 
@@ -84,6 +88,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.fbtn_logout:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(UserActivity.this, LoginActivity.class));
+                mPrdLogin = new ProgressDialog(UserActivity.this);
+                mPrdLogin.show();
+                mPrdLogin.setContentView(R.layout.progress_dialog_auth);
+                mPrdLogin.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 break;
         }
@@ -93,5 +102,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     {
         mTvUserId.setText(mFirebaseUser.getUid());
         mTvEmail.setText(mFirebaseUser.getEmail());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPrdLogin.dismiss();
     }
 }

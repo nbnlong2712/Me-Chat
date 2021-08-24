@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.longtraidep.appchat.Activity.LoginActivity;
 
 import java.util.HashMap;
 
@@ -128,9 +129,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(getApplicationContext(), "Please fill enough!", Toast.LENGTH_SHORT).show();
                 } else {
                     mPrdRegister = new ProgressDialog(RegisterActivity.this);
+                    mPrdRegister.show();
                     mPrdRegister.setContentView(R.layout.progress_dialog_auth);
                     mPrdRegister.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                    mPrdRegister.show();
                     registerNewUser(mFullname, mEmail, mPassword);
                 }
                 break;
