@@ -66,7 +66,6 @@ public class ChatFragment extends Fragment {
         dbref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.i("Test size", snapshot.getChildrenCount() + "");
 
                 for (DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
@@ -90,18 +89,12 @@ public class ChatFragment extends Fragment {
                         mRcvChatUsers.setLayoutManager(new LinearLayoutManager(getActivity()));
                         mRcvChatUsers.setAdapter(mUserAdapter);
                     }
-
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }

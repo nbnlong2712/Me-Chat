@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="10">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.75"
+            tools:ignore="NestedWeights">
+            <ImageButton
+                android:id="@+id/ibtn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="6.5"
+            android:gravity="center"
+            android:text="@string/edit"
+            android:textSize="37sp" />
+        <LinearLayout
+            android:layout_weight="1.75"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="4.4"
+        android:layout_width="match_parent"
+        android:weightSum="7"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/cimv_avatar"
+            android:layout_weight="5.5"
+            android:elevation="12dp"
+            android:layout_width="0dp"
+            android:layout_margin="15dp"
+            android:src="@drawable/firebase_img"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    <View
+        android:background="@color/grey_4"
+        android:layout_width="match_parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:layout_weight="3.4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_margin="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_weight="2.8"
+                android:layout_width="0dp"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"
+                android:text="@string/username" />
+
+            <TextView
+                android:layout_weight="0.3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:textSize="18sp"
+                android:text=":" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edt_username"
+                android:layout_weight="6.9"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:inputType="text"
+                android:hint="@string/username" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="18dp"
+            android:weightSum="10"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.8"
+                android:textSize="18sp"
+                android:text="@string/email" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginStart="2dp"
+                android:text=":" />
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:textSize="18sp"
+                android:layout_weight="6.9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/email" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="18dp"
+            android:layout_marginTop="20dp"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_weight="2.8"
+                android:text="@string/user_id" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:textSize="18sp"
+                android:text=":" />
+
+            <TextView
+                android:id="@+id/tv_id"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_weight="6.9"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/user_id" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fbtn_save"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:text="@string/save"
+            android:backgroundTint="@color/green_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</LinearLayout>

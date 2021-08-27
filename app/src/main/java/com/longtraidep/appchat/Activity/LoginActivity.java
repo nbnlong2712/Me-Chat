@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     mPrdLogin.show();
                     mPrdLogin.setContentView(R.layout.progress_dialog_auth);
                     mPrdLogin.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    mPrdLogin.setCanceledOnTouchOutside(false);
                     loginUser(mEmail, mPassword);
                 }
                 break;

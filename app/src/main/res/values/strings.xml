@@ -6,6 +6,7 @@
     //Main Activity
     <string name="chat">Chat</string>
     <string name="user">User</string>
+    <string name="online">Online</string>
 
     //Register activity
     <string name="full_name">Full Name</string>
@@ -27,8 +28,11 @@
     <string name="edit">Edit</string>
     <string name="profile">Profile</string>
     <string name="delete_account">Delete account</string>
+    <string name="update_avatar">Update avatar</string>
 
     //Message activity
     <string name="message">Message</string>
 
+    //Edit Activity
+    <string name="save">Save</string>
 </resources>

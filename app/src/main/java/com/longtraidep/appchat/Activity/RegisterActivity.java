@@ -132,6 +132,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     mPrdRegister.show();
                     mPrdRegister.setContentView(R.layout.progress_dialog_auth);
                     mPrdRegister.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    mPrdRegister.setCanceledOnTouchOutside(false);
                     registerNewUser(mFullname, mEmail, mPassword);
                 }
                 break;
