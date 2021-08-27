@@ -60,8 +60,6 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     private DatabaseReference mDbRef;
     private FirebaseAuth mAuth;
 
-    //'8h57'
-
     private ActivityResultLauncher<Intent> mImageLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -103,6 +101,18 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.checkStatus("onl");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.checkStatus("off");
     }
 
     public void init()

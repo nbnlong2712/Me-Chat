@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         if (users.getImg().toLowerCase().equals("default"))
             holder.mCircleImageView.setImageResource(R.mipmap.ic_launcher);
         else Glide.with(holder.itemView).load(users.getImg()).into(holder.mCircleImageView);
+
+        if (users.getState().equals("onl"))
+            holder.mLinearLayout.setVisibility(View.VISIBLE);
+        else
+            holder.mLinearLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -54,14 +60,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
     public class UserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        LinearLayout mLinearLayout;
         CircleImageView mCircleImageView;
         TextView mTextView;
 
         public UserHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mCircleImageView = itemView.findViewById(R.id.cimv_avatar);
-            mTextView = itemView.findViewById(R.id.tv_username);
+            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.lnlayout_status);
+            mCircleImageView =(CircleImageView) itemView.findViewById(R.id.cimv_avatar);
+            mTextView =(TextView) itemView.findViewById(R.id.tv_username);
         }
 
         @Override

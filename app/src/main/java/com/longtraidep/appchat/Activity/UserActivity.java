@@ -73,6 +73,18 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         setInfoUser();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.checkStatus("onl");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.checkStatus("off");
+    }
+
     public void init() {
         mIBtnBack = (ImageButton) findViewById(R.id.ibtn_back);
         mTvEmail = (TextView) findViewById(R.id.tv_email);

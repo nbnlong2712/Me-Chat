@@ -44,6 +44,7 @@
             android:layout_weight="0.8"
             android:layout_width="0dp"
             android:gravity="center"
+            android:visibility="invisible"
             android:layout_margin="15dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">

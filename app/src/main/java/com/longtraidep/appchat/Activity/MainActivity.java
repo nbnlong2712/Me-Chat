@@ -24,6 +24,9 @@ import com.longtraidep.appchat.Adapter.ViewPagerAdapter;
 import com.longtraidep.appchat.R;
 import com.longtraidep.appchat.Object.Users;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseUser mFirebaseUser;
@@ -54,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+        checkStatus("onl");
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
         mViewPager.setAdapter(viewPagerAdapter);
@@ -91,5 +96,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, UserActivity.class));
                 break;
         }
+    }
+
+    public static void checkStatus(String state)
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("State", state);
+
+        FirebaseDatabase.getInstance().getReference().
+                child("Users").
+                child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                .updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkStatus("onl");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkStatus("off");
     }
 }

@@ -54,6 +54,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private MessageAdapter mMessageAdapter;
     private List<Message> mMessageList;
 
+    private ValueEventListener mMessageListener;
+
     //Path to sender and receiver
     private String mSenderId = "", mReceiverId = "";
 
@@ -127,22 +129,20 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
             String chatDbId = chatDbRef.getKey();
 
-            HashMap messageInfo = new HashMap();
+            HashMap<String, Object> messageInfo = new HashMap<>();
             messageInfo.put("sender", mSenderId);
             messageInfo.put("message", message);
             messageInfo.put("type", "text");
+            messageInfo.put("isSeen", false);
 
-            HashMap messagePath = new HashMap();
+            HashMap<String, Object> messagePath = new HashMap<>();
             messagePath.put(senderRef + "/" + chatDbId, messageInfo);
             messagePath.put(receiverRef + "/" + chatDbId, messageInfo);
 
             mDatabaseRef.updateChildren(messagePath).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful())
-                    {
-                        Log.i("Test send", mSenderId + ": " + message);
-                    }
+                    if (task.isSuccessful()){}
                     else
                     {
                         FirebaseAuthException e = (FirebaseAuthException) task.getException();
@@ -172,13 +172,53 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                     Message message = dataSnapshot.getValue(Message.class);
                     mMessageList.add(message);
                 }
-                Log.i("test size", mMessageList.size() + "");
                 mMessageAdapter.setData(mMessageList);
                 mRcvMessages.setAdapter(mMessageAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
 
+    public void SeenMessage(String userId)
+    {
+        DatabaseReference ref = mDatabaseRef.child("Chats").child(mSenderId);
+        mMessageListener = ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count = 1;
+                for (DataSnapshot snapshot1 : snapshot.getChildren())
+                {
+                    if (count < snapshot.getChildrenCount())
+                        count++;
+                    else{
+                        Message message = snapshot1.getValue(Message.class);
+                        if (!mSenderId.equals(message.getSender()))
+                        {
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("isSeen", true);
+                            snapshot1.getRef().updateChildren(hashMap);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.checkStatus("onl");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.checkStatus("off");
     }
 }

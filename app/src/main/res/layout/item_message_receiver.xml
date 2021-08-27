@@ -30,6 +30,7 @@
             android:gravity="start|center_vertical"
             android:padding="10dp"
             android:paddingStart="9dp"
+            android:textSize="15sp"
             android:text="@string/message"
             android:textColor="@color/grey_10"
             tools:ignore="RtlSymmetry" />

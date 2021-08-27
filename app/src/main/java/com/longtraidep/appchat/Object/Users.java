@@ -7,14 +7,24 @@ public class Users implements Serializable {
     private String Id;
     private String Username;
     private String Img;
+    private String State = "false";
 
     public Users() {
     }
 
-    public Users(String id, String username, String img) {
+    public Users(String id, String username, String img, String state) {
         Id = id;
         Username = username;
         Img = img;
+        State = state;
+    }
+
+    public String getState() {
+        return State;
+    }
+
+    public void setState(String state) {
+        State = state;
     }
 
     public String getId() {
