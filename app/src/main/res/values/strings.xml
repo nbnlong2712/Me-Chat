@@ -34,6 +34,8 @@
     <string name="message">Message</string>
     <string name="seen">Seen</string>
     <string name="deliveried">Deliveried</string>
+    <string name="load_image">Loading image...</string>
+    <string name="load_pdf">Uploading pdf file...</string>
 
     //Edit Activity
     <string name="save">Save</string>

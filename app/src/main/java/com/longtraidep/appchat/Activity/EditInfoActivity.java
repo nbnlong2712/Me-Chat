@@ -1,6 +1,7 @@
 package com.longtraidep.appchat.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,8 @@ import com.longtraidep.appchat.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -53,6 +57,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     private EditText mEdtUsername;
 
     private ProgressDialog mPrdDialog;
+    private ProgressBar mProgressBar;
 
     private ExtendedFloatingActionButton mFBtnSave;
 
@@ -64,8 +69,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == RESULT_OK)
-                    {
+                    if (result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         Uri imgPath = data.getData();
                         CropImage.activity()
@@ -81,25 +85,30 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_info);
 
-        init();
-
         mAvtRef = FirebaseStorage.getInstance().getReference();
         mDbRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        mDbRef.child("Users").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        init();
+
+        mDbRef.child("Users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addValueEventListener(new ValueEventListener() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users users = snapshot.getValue(Users.class);
+                mEdtUsername.setText("");
 
+                Log.i("Username nguyên bản từ database", users.getUsername());
                 mEdtUsername.setText(users.getUsername());
 
                 if (users.getImg().toLowerCase().equals("default"))
                     mCImvAvatar.setImageResource(R.mipmap.ic_launcher);
-                else Glide.with(EditInfoActivity.this).load(users.getImg()).into(mCImvAvatar);
+                else Glide.with(getApplicationContext()).load(users.getImg()).into(mCImvAvatar);
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 
@@ -115,14 +124,21 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         MainActivity.checkStatus("off");
     }
 
-    public void init()
-    {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mProgressBar.setVisibility(View.GONE);
+        mFBtnSave.setVisibility(View.VISIBLE);
+    }
+
+    public void init() {
         mIBtnBack = (ImageButton) findViewById(R.id.ibtn_back);
         mCImvAvatar = (CircleImageView) findViewById(R.id.cimv_avatar);
         mTvEmail = (TextView) findViewById(R.id.tv_email);
         mTvUserId = (TextView) findViewById(R.id.tv_id);
         mEdtUsername = (EditText) findViewById(R.id.edt_username);
         mFBtnSave = (ExtendedFloatingActionButton) findViewById(R.id.fbtn_save);
+        mProgressBar = findViewById(R.id.prb_loading);
 
         mFBtnSave.setOnClickListener(this);
         mIBtnBack.setOnClickListener(this);
@@ -133,8 +149,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     @SuppressLint({"NonConstantResourceId", "QueryPermissionsNeeded"})
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.ibtn_back:
                 Intent i1 = new Intent(EditInfoActivity.this, UserActivity.class);
                 startActivity(i1);
@@ -168,8 +183,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 avtRef.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             //Get download URL of image just uploaded to pass into Img field to set avatar
                             avtRef.getDownloadUrl().addOnSuccessListener(EditInfoActivity.this, new OnSuccessListener<Uri>() {
                                 @Override
@@ -178,8 +192,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                                     mDbRef.child("Users").child(user.getUid()).child("Img").setValue(uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful())
-                                            {
+                                            if (task.isSuccessful()) {
                                                 //Set avatar
                                                 mDbRef.child("Users").child(user.getUid()).addValueEventListener(new ValueEventListener() {
                                                     @Override
@@ -187,15 +200,17 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                                                         Users users = snapshot.getValue(Users.class);
                                                         if (users.getImg().toLowerCase().equals("default"))
                                                             mCImvAvatar.setImageResource(R.mipmap.ic_launcher);
-                                                        else Glide.with(EditInfoActivity.this).load(users.getImg()).into(mCImvAvatar);
+                                                        else
+                                                            Glide.with(EditInfoActivity.this).load(users.getImg()).into(mCImvAvatar);
                                                     }
+
                                                     @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {}
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                    }
                                                 });
                                                 Toast.makeText(getApplicationContext(), "Change avatar successful!", Toast.LENGTH_SHORT).show();
                                                 mPrdDialog.dismiss();
-                                            }
-                                            else {
+                                            } else {
                                                 Log.i("Upload image error", task.getException().toString());
                                                 Toast.makeText(getApplicationContext(), "Change avatar failed!", Toast.LENGTH_SHORT).show();
                                                 mPrdDialog.dismiss();
@@ -211,8 +226,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                                     mPrdDialog.dismiss();
                                 }
                             });
-                        }
-                        else{
+                        } else {
                             Log.i("Upload image error", task.getException().toString());
                             Toast.makeText(getApplicationContext(), "Change avatar failed!", Toast.LENGTH_SHORT).show();
                             mPrdDialog.dismiss();
@@ -226,42 +240,58 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void updateUserName()
-    {
+    public void updateUserName() {
         String username = mEdtUsername.getText().toString().trim();
 
-        if (!username.isEmpty() || username != null)
-        {
-            DatabaseReference dbref = mDbRef.child("Users").child(mAuth.getCurrentUser().getUid());
-            dbref.addValueEventListener(new ValueEventListener() {
+        if (!username.isEmpty() || username != null) {
+            Log.i("Username tại ô edittext", username);
+
+            DatabaseReference dbref = mDbRef.child("Users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+            dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @SuppressLint("LongLogTag")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Users users = snapshot.getValue(Users.class);
+                    Log.i("Username lấy từ database xuống thêm lần nữa", users.getUsername());
 
-                    if (!username.equals(users.getUsername()))
-                    {
-                        showLoadingDialog();
+                    if (!username.equals(users.getUsername())) { /////
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        mFBtnSave.setVisibility(View.GONE);
 
-                        dbref.child("Username").setValue(username).addOnSuccessListener(EditInfoActivity.this, new OnSuccessListener<Void>() {
+                        Log.i("Username từ ô edittext trước khi lưu", username);
+                        Log.i("Username lấy từ database xuống trước khi lưu ", users.getUsername());
+                        Log.i("Username", "---------------------------------------------------------");
+
+                        dbref.child("Username").setValue(username).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                dbref.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Users users1 = snapshot.getValue(Users.class);
+                                        mEdtUsername.setText(users1.getUsername());
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {}
+                                });
                                 Toast.makeText(getApplicationContext(), "Changed user name sucessfully!", Toast.LENGTH_SHORT).show();
-                                mPrdDialog.dismiss();
                                 Intent i = new Intent(EditInfoActivity.this, UserActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                                 finish();
                             }
                         });
                     }
                 }
+
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
             });
         }
     }
 
-    public void showLoadingDialog()
-    {
+    public void showLoadingDialog() {
         mPrdDialog = new ProgressDialog(EditInfoActivity.this);
         mPrdDialog.show();
         mPrdDialog.setContentView(R.layout.progress_dialog_avatar);

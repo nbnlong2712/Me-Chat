@@ -52,10 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users user = snapshot.getValue(Users.class);
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
 
         checkStatus("onl");

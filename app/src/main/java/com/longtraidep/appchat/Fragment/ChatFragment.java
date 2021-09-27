@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,8 @@ public class ChatFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRf;
 
+    private ProgressBar mPrbLoading;
+
     public ChatFragment(){}
 
     @Nullable
@@ -57,10 +60,12 @@ public class ChatFragment extends Fragment {
 
     public void init(View view){
         mRcvChatUsers = (RecyclerView) view.findViewById(R.id.rcv_chat_user);
+        mPrbLoading = (ProgressBar) view.findViewById(R.id.prb_loading);
     }
 
     public void getChatUsers()
     {
+        mPrbLoading.setVisibility(View.VISIBLE);
         List<String> listUid = new ArrayList<>();
         DatabaseReference dbref = mDatabaseRf.child("Chats").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         dbref.addValueEventListener(new ValueEventListener() {
@@ -85,6 +90,7 @@ public class ChatFragment extends Fragment {
                                 mUsers.add(users);
                         }
 
+                        mPrbLoading.setVisibility(View.GONE);
                         mUserAdapter.setData(mUsers);
                         mRcvChatUsers.setLayoutManager(new LinearLayoutManager(getActivity()));
                         mRcvChatUsers.setAdapter(mUserAdapter);

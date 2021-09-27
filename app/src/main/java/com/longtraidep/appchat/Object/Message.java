@@ -3,16 +3,34 @@ package com.longtraidep.appchat.Object;
 public class Message {
     String sender;
     String message;
+    String name;
     String type;
-    Boolean isSeen;
+    String seen = "false";
 
     public Message(){}
 
-    public Message(String sender, String message, String type, Boolean isSeen) {
+    public Message(String sender, String message, String name, String type, String seen) {
         this.sender = sender;
         this.message = message;
+        this.name = name;
         this.type = type;
-        this.isSeen = isSeen;
+        this.seen = seen;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSeen() {
+        return seen;
+    }
+
+    public void setSeen(String seen) {
+        this.seen = seen;
     }
 
     public String getSender() {

@@ -1,17 +1,27 @@
 package com.longtraidep.appchat.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.inputmethodservice.ExtractEditText;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -27,11 +38,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.longtraidep.appchat.Adapter.MessageAdapter;
 import com.longtraidep.appchat.Object.Message;
 import com.longtraidep.appchat.R;
 import com.longtraidep.appchat.Object.Users;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +65,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
+    private StorageReference mStoreRef;
 
     private RecyclerView mRcvMessages;
     private MessageAdapter mMessageAdapter;
@@ -56,8 +73,182 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
     private ValueEventListener mMessageListener;
 
+    private ProgressDialog mPrdDialog;
+
     //Path to sender and receiver
     private String mSenderId = "", mReceiverId = "";
+
+    private ActivityResultLauncher<Intent> mImgLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Get image
+                        Intent data = result.getData();
+                        Uri imgPath = data.getData();
+
+                        showImageLoadingDialog();
+
+                        DatabaseReference db = mDatabaseRef.child("Chats").child(mSenderId).child(mReceiverId).push();
+                        String senderRef = "Chats/" + mSenderId + "/" + mReceiverId;
+                        String receiverRef = "Chats/" + mReceiverId + "/" + mSenderId;
+                        String key = db.getKey();
+
+                        // Upload image to Sender storage
+                        StorageReference storeRef = mStoreRef.child(mSenderId).child(mReceiverId).child(imgPath.getLastPathSegment() + ".jpg");
+                        storeRef.putFile(imgPath).addOnCompleteListener(MessageActivity.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    // If task successful, get download URL and upload to firebase realtime Chats
+                                    storeRef.getDownloadUrl().addOnSuccessListener(MessageActivity.this, new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            //Prepare data
+                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                            hashMap.put("sender", mSenderId);
+                                            hashMap.put("message", uri.toString());
+                                            hashMap.put("name", "");
+                                            hashMap.put("type", "img");
+                                            hashMap.put("seen", "false");
+
+                                            //Push data to realtime database
+                                            HashMap<String, Object> messagePath = new HashMap<>();
+                                            messagePath.put(senderRef + "/" + key, hashMap);
+                                            mDatabaseRef.updateChildren(messagePath).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    mPrdDialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        //Upload image to Receiver storage
+                        StorageReference storageRef1 = mStoreRef.child(mReceiverId).child(mSenderId).child(imgPath.getLastPathSegment() + ".jpg");
+                        storageRef1.putFile(imgPath).addOnCompleteListener(MessageActivity.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    storageRef1.getDownloadUrl().addOnSuccessListener(MessageActivity.this, new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            //Prepare data
+                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                            hashMap.put("sender", mSenderId);
+                                            hashMap.put("message", uri.toString());
+                                            hashMap.put("name", "");
+                                            hashMap.put("type", "img");
+                                            hashMap.put("seen", "false");
+
+                                            //Push data to realtime database
+                                            HashMap<String, Object> messagePath = new HashMap<>();
+                                            messagePath.put(receiverRef + "/" + key, hashMap);
+                                            mDatabaseRef.updateChildren(messagePath).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {}
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+    );
+
+    private ActivityResultLauncher<Intent> mPdfLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK)
+                    {
+                        Intent data = result.getData();
+                        Uri pdfPath = data.getData();
+
+                        DatabaseReference db = mDatabaseRef.child("Chats").child(mSenderId).child(mReceiverId).push();
+                        String senderRef = "Chats/" + mSenderId + "/" + mReceiverId;
+                        String receiverRef = "Chats/" + mReceiverId + "/" + mSenderId;
+                        String key = db.getKey();
+
+                        // Upload pdf file to Sender storage
+                        showPdfLoadingDialog();
+                        StorageReference storeRef = mStoreRef.child(mSenderId).child(mReceiverId).child(pdfPath.getLastPathSegment() + ".pdf");
+                        storeRef.putFile(pdfPath).addOnCompleteListener(MessageActivity.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful())
+                                {
+                                    storeRef.getDownloadUrl().addOnSuccessListener(MessageActivity.this, new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            //Prepare data
+                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                            hashMap.put("sender", mSenderId);
+                                            hashMap.put("message", uri.toString());
+                                            hashMap.put("name", getNamePdfFile(pdfPath));
+                                            hashMap.put("type", "pdf");
+                                            hashMap.put("seen", "false");
+
+                                            HashMap<String, Object> messagePath = new HashMap<>();
+                                            messagePath.put(senderRef + "/" + key, hashMap);
+                                            mDatabaseRef.updateChildren(messagePath);
+                                            mPrdDialog.dismiss();
+
+                                            // Upload pdf file to Receiver storage
+                                            StorageReference storeRef1 = mStoreRef.child(mReceiverId).child(mSenderId).child(pdfPath.getLastPathSegment() + ".pdf");
+                                            storeRef1.putFile(pdfPath).addOnCompleteListener(MessageActivity.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                    if (task.isSuccessful())
+                                                    {
+                                                        HashMap<String, Object> messPath = new HashMap<>();
+                                                        messPath.put(receiverRef + "/" + key, hashMap);
+                                                        mDatabaseRef.updateChildren(messPath);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        Log.i("PDF path", pdfPath.getPath() + ", " + getNamePdfFile(pdfPath));
+                    }
+                }
+            }
+    );
+
+    public String getNamePdfFile(Uri uri)
+    {
+        File myFile = new File(uri.toString());
+        String displayName = "";
+
+        if (uri.toString().startsWith("content://"))
+        {
+            Cursor cursor = null;
+            try
+            {
+                cursor = getContentResolver().query(uri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst())
+                {
+                    displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+            finally
+            {
+                cursor.close();
+            }
+        }
+        else if (uri.toString().startsWith("file://"))
+        {
+            displayName = myFile.getName();
+        }
+        return displayName;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +265,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         mSenderId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         mReceiverId = mUser.getId();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        mStoreRef = FirebaseStorage.getInstance().getReference();
 
         init();
 
@@ -83,6 +275,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             Glide.with(this).load(mUser.getImg()).into(mCImvAvatar);
         else mCImvAvatar.setImageResource(R.mipmap.ic_launcher);
 
+        seenMessage();
         displayMessage();
     }
 
@@ -109,12 +302,42 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(i);
                 break;
             case R.id.imv_menu_vertical:
-                Toast.makeText(getApplicationContext(), "Menu", Toast.LENGTH_SHORT).show();
+                sendFiles();
                 break;
             case R.id.imv_send_message:
                 sendMessage();
                 break;
         }
+    }
+
+    public void sendFiles() {
+        CharSequence options[] = new CharSequence[]{
+                "Images",
+                "PDF Files",
+                "Doc Files"
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this)
+                .setTitle("Select files")
+                .setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("image/*");
+                            if (intent.resolveActivity(getPackageManager()) != null)
+                                mImgLauncher.launch(intent);
+                        } else if (which == 1) {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("application/pdf");
+                            if (intent.resolveActivity(getPackageManager()) != null)
+                                mPdfLauncher.launch(intent);
+                        } else if (which == 2) {
+
+                        }
+                    }
+                });
+        builder.show();
     }
 
     public void sendMessage() {
@@ -132,8 +355,9 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             HashMap<String, Object> messageInfo = new HashMap<>();
             messageInfo.put("sender", mSenderId);
             messageInfo.put("message", message);
+            messageInfo.put("name", "");
             messageInfo.put("type", "text");
-            messageInfo.put("isSeen", false);
+            messageInfo.put("seen", "false");
 
             HashMap<String, Object> messagePath = new HashMap<>();
             messagePath.put(senderRef + "/" + chatDbId, messageInfo);
@@ -142,12 +366,11 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             mDatabaseRef.updateChildren(messagePath).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()){}
-                    else
-                    {
+                    if (task.isSuccessful()) {
+                    } else {
                         FirebaseAuthException e = (FirebaseAuthException) task.getException();
                         if (e != null)
-                            Log.i("Firebase error","Error code: " + e.getErrorCode() + ", " + e.getMessage());
+                            Log.i("Firebase error", "Error code: " + e.getErrorCode() + ", " + e.getMessage());
                     }
                     mEdtMessage.setText("");
                 }
@@ -155,8 +378,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public void displayMessage()
-    {
+    public void displayMessage() {
         mMessageList = new ArrayList<>();
         mMessageAdapter = new MessageAdapter(mUser);
         mRcvMessages.setLayoutManager(new LinearLayoutManager(this));
@@ -167,37 +389,50 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mMessageList.clear();
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren())
-                {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Message message = dataSnapshot.getValue(Message.class);
                     mMessageList.add(message);
                 }
                 mMessageAdapter.setData(mMessageList);
                 mRcvMessages.setAdapter(mMessageAdapter);
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 
-    public void SeenMessage(String userId)
-    {
-        DatabaseReference ref = mDatabaseRef.child("Chats").child(mSenderId);
+    public void seenMessage() {
+        DatabaseReference ref = mDatabaseRef.child("Chats").child(mSenderId).child(mReceiverId);
         mMessageListener = ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int count = 1;
-                for (DataSnapshot snapshot1 : snapshot.getChildren())
-                {
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     if (count < snapshot.getChildrenCount())
                         count++;
-                    else{
+                    else {
                         Message message = snapshot1.getValue(Message.class);
-                        if (!mSenderId.equals(message.getSender()))
-                        {
+                        if (!mSenderId.equals(message.getSender())) {
                             HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("isSeen", true);
+                            hashMap.put("seen", "true");
                             snapshot1.getRef().updateChildren(hashMap);
+                            mDatabaseRef.child("Chats").child(mReceiverId).child(mSenderId).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshott) {
+                                    for (DataSnapshot snapshot2 : snapshott.getChildren()) {
+                                        if (snapshot1.getKey().equals(snapshot2.getKey())) {
+                                            HashMap<String, Object> hashMap1 = new HashMap<>();
+                                            hashMap1.put("seen", "true");
+                                            snapshot2.getRef().updateChildren(hashMap1);
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                         }
                     }
                 }
@@ -205,7 +440,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -219,6 +453,24 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onPause() {
         super.onPause();
+        mDatabaseRef.removeEventListener(mMessageListener);
         MainActivity.checkStatus("off");
     }
+
+    public void showImageLoadingDialog() {
+        mPrdDialog = new ProgressDialog(MessageActivity.this);
+        mPrdDialog.show();
+        mPrdDialog.setContentView(R.layout.progress_dialog_send_image);
+        mPrdDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        mPrdDialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void showPdfLoadingDialog() {
+        mPrdDialog = new ProgressDialog(MessageActivity.this);
+        mPrdDialog.show();
+        mPrdDialog.setContentView(R.layout.progress_dialog_send_pdf);
+        mPrdDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        mPrdDialog.setCanceledOnTouchOutside(false);
+    }
+
 }

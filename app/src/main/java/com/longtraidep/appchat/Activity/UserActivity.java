@@ -61,13 +61,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     mTvUsername.setText(mUser.getUsername());
                     if (mUser.getImg().toLowerCase().equals("default"))
                         mCImvAvatar.setImageResource(R.mipmap.ic_launcher);
-                    else Glide.with(UserActivity.this).load(mUser.getImg()).into(mCImvAvatar);
+                    else Glide.with(getApplicationContext()).load(mUser.getImg()).into(mCImvAvatar);
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
 
         setInfoUser();
@@ -77,12 +75,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         MainActivity.checkStatus("onl");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MainActivity.checkStatus("off");
     }
 
     public void init() {
@@ -108,11 +100,13 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(UserActivity.this, MainActivity.class));
                 break;
             case R.id.fbtn_logout:
+                showLoadingDialog();
+                MainActivity.checkStatus("off");
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(UserActivity.this, LoginActivity.class).
                         setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                showLoadingDialog();
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                mPrdLogin.dismiss();
                 finish();
                 break;
             case R.id.cimv_avatar:
@@ -139,11 +133,5 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public void setInfoUser() {
         mTvUserId.setText(mFirebaseUser.getUid());
         mTvEmail.setText(mFirebaseUser.getEmail());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPrdLogin.dismiss();
     }
 }

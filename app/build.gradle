@@ -70,4 +70,7 @@ dependencies {
 
     //Crop image
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    //PDF viewer
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 }
