@@ -1,3 +1,3 @@
 # Me-Chat
 ## Whatsapp clone
-### Checkout to Master branch to view code. 
+### Checkout Master branch to view code. 
