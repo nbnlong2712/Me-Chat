@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">MeChat</string>
+    <string name="facebook_app_id">318938773083048</string>
+    <string name="fb_login_protocol_scheme">fb318938773083048</string>
+
+    <!--Main Activity-->
+    <string name="chat">Chat</string>
+    <string name="user">User</string>
+    <string name="online">Online</string>
+    <string name="never_ever_chat">You have never chatted before</string>
+
+    <!--Register activity-->
+    <string name="full_name">Full Name</string>
+
+    <!--Login Activity-->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="register">Register</string>
+    <string name="here">Here</string>
+    <string name="login">Login</string>
+    <string name="using_connect">Or connect using</string>
+    <string name="google_login">Login with Google</string>
+    <string name="facebook_login">Login with Facebook</string>
+
+    <!--User activity-->
+    <string name="user_id">User ID</string>
+    <string name="logout">Logout</string>
+    <string name="edit">Edit</string>
+    <string name="profile">Profile</string>
+    <string name="delete_account">Delete account</string>
+    <string name="update_avatar">Update avatar</string>
+
+    <!--Message activity-->
+    <string name="message">Message</string>
+    <string name="seen">Seen</string>
+    <string name="deliveried">Deliveried</string>
+    <string name="load_image">Loading image…</string>
+    <string name="load_pdf">Uploading pdf file…</string>
+
+    <!--Edit Activity-->
+    <string name="save">Save</string>
+
+    <!--Notification new message-->
+    <string name="new_message">New Message!</string>
+</resources>

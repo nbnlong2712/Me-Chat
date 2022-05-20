@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+                <!--GREEN-->
+    <color name="green_0">#90EE90</color>
+    <color name="green_1">#00f500</color>
+    <color name="green_2">#00e100</color>
+    <color name="green_3">#00cd00</color>
+    <color name="green_4">#00b900</color>
+    <color name="green_5">#00a500</color>
+    <color name="green_6">#009100</color>
+    <color name="green_7">#00a500</color>
+    <color name="green_8">#007d00</color>
+    <color name="green_9">#006900</color>
+    <color name="green_10">#005500</color>
+
+                <!--BLUE-->
+    <color name="blue_0">#87CEFA</color>
+    <color name="blue_1">#37dcff</color>
+    <color name="blue_2">#00c6ff</color>
+    <color name="blue_3">#37a5ff</color>
+    <color name="blue_4">#008bff</color>
+    <color name="blue_5">#196ffe</color>
+    <color name="blue_6">#0054fe</color>
+    <color name="blue_7">#0046fe</color>
+    <color name="blue_8">#001cfe</color>
+    <color name="blue_9">#0000d0</color>
+    <color name="blue_10">#000093</color>
+
+                <!--RED-->
+    <color name="red_1">#fe6565</color>
+    <color name="red_2">#fe5657</color>
+    <color name="red_3">#fe3130</color>
+    <color name="red_4">#fe1212</color>
+    <color name="red_5">#f20104</color>
+    <color name="red_6">#d60000</color>
+    <color name="red_7">#b90000</color>
+    <color name="red_8">#9a0000</color>
+    <color name="red_9">#800000</color>
+    <color name="red_10">#5f0000</color>
+
+                <!--GREY-->
+    <color name="grey_0">#f0f0f0</color>
+    <color name="grey_1">#ebebeb</color>
+    <color name="grey_2">#dcdcdc</color>
+    <color name="grey_3">#cdcdcd</color>
+    <color name="grey_4">#c3c3c3</color>
+    <color name="grey_5">#b4b4b4</color>
+    <color name="grey_6">#a8a8a8</color>
+    <color name="grey_7">#989898</color>
+    <color name="grey_8">#8b8b8b</color>
+    <color name="grey_9">#6e6e6e</color>
+    <color name="grey_10">#4b4b4b</color>
+
+    <color name="mint">#99EDC3</color>
+</resources>
